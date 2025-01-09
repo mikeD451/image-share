@@ -6,7 +6,6 @@ import './App.css'
 import { DragEvent } from 'react' ;
 
 function App() {
-  const [count, setCount] = useState(0)
   const [isOver, setIsOver] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
  
@@ -32,6 +31,7 @@ function App() {
     // Use FileReader to read file content
     droppedFiles.forEach((file) => {
       console.log("File is ", file.name, file.size, file.type);
+      console.log(files);
     });
   };
 
