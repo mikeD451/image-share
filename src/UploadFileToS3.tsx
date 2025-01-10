@@ -1,17 +1,18 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";    
+
+import { S3ClientConfig } from "@aws-sdk/client-s3";   
+
+
+
     
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function UploadFileToS3(ibucketName: string, ikey: string, ifileContent: any) {
+function UploadFileToS3(awscreds: S3ClientConfig, ibucketName: string, ikey: string, ifileContent: any) {
     
 
 const uploadFileToS3 = async (bucketName: string = ibucketName, key: string = ikey, fileContent: string = ifileContent) => {
 // Create S3 client
 const s3Client = new S3Client({
-    region: "eu-west-2",
-    credentials: {
-        accessKeyId: "AKIA3YDASAYBEHBVZQXF",
-        secretAccessKey: "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",
-    }
+    ...awscreds,
    
 });
 

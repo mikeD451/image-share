@@ -5,9 +5,25 @@ import './App.css'
 //import React from 'react'
 import { DragEvent } from 'react' ;
 import UploadFileToS3 from './UploadFileToS3' ;
+// import dotenv from 'dotenv';
+import { S3ClientConfig } from "@aws-sdk/client-s3";    
+
+
 
 
 function App() {
+
+const awskey = import.meta.env.VITE_ACCESS_KEY_ID
+const secret = import.meta.env.VITE_SECRET_ACCESS_KEY
+// const awskey = "AKIA3YDASAYBEHBVZQXF" ; 
+// const secret = "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" ; 
+const awscreds: S3ClientConfig = {
+    region: "eu-west-2",
+    credentials: {
+        accessKeyId: awskey , 
+        secretAccessKey: secret
+    }
+};
   const [isOver, setIsOver] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
  
@@ -39,7 +55,7 @@ function App() {
       reader.onload = () => {
         const fileContent = reader.result;
         if (fileContent) {
-            UploadFileToS3("imageshare", file.name, fileContent);
+            UploadFileToS3(awscreds, "imageshare", file.name, fileContent);
         }
       };
       reader.onerror = (error) => {
