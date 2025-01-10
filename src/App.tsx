@@ -3,12 +3,25 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 //import React from 'react'
+import { Amplify } from "aws-amplify";
+import outputs from "../amplify_outputs.json";
+// import { Schema } from "../amplify/data/resource";
+// import { generateClient } from "aws-amplify/data";
+
+import "@aws-amplify/ui-react/styles.css";
+
+
 import { DragEvent } from 'react' ;
 import UploadFileToS3 from './UploadFileToS3' ;
 // import dotenv from 'dotenv';
 import { S3ClientConfig } from "@aws-sdk/client-s3";    
 
 
+Amplify.configure(outputs);
+
+// const amplifyClient = generateClient<Schema>({
+//   authMode: "userPool",
+// });
 
 
 function App() {
