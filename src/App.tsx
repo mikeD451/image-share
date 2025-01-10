@@ -4,6 +4,8 @@ import viteLogo from '/vite.svg'
 import './App.css'
 //import React from 'react'
 import { DragEvent } from 'react' ;
+import UploadFileToS3 from './UploadFileToS3' ;
+
 
 function App() {
   const [isOver, setIsOver] = useState(false);
@@ -31,8 +33,20 @@ function App() {
     // Use FileReader to read file content
     droppedFiles.forEach((file) => {
       console.log("File is ", file.name, file.size, file.type);
+
       console.log(files);
-    });
+      const reader = new FileReader();
+      reader.onload = () => {
+        const fileContent = reader.result;
+        if (fileContent) {
+            UploadFileToS3("imageshare", file.name, fileContent);
+        }
+      };
+      reader.onerror = (error) => {
+          console.error("Error reading file", error);
+      };
+      reader.readAsArrayBuffer(file); 
+      });
   };
 
   
