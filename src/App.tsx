@@ -15,8 +15,7 @@ function App() {
 
 const awskey = import.meta.env.VITE_ACCESS_KEY_ID
 const secret = import.meta.env.VITE_SECRET_ACCESS_KEY
-// const awskey = "AKIA3YDASAYBEHBVZQXF" ; 
-// const secret = "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" ; 
+
 const awscreds: S3ClientConfig = {
     region: "eu-west-2",
     credentials: {

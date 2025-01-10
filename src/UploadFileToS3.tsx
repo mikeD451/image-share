@@ -2,8 +2,6 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 import { S3ClientConfig } from "@aws-sdk/client-s3";   
 
-
-
     
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function UploadFileToS3(awscreds: S3ClientConfig, ibucketName: string, ikey: string, ifileContent: any) {
