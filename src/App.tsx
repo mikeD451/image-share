@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, setStatus } from 'react'
+import timenspace from './assets/timenspace.jpg'
+
 import './App.css'
 //import React from 'react'
 import { Amplify } from "aws-amplify";
@@ -26,6 +26,7 @@ Amplify.configure(outputs);
 
 function App() {
 
+//let returnCode = -1;
 const awskey = import.meta.env.VITE_ACCESS_KEY_ID
 const secret = import.meta.env.VITE_SECRET_ACCESS_KEY
 
@@ -37,7 +38,14 @@ const awscreds: S3ClientConfig = {
     }
 };
   const [isOver, setIsOver] = useState(false);
+  const [status, setStatus] = useState({ type: ''})
+
   const [files, setFiles] = useState<File[]>([]);
+
+  const [ selectedValue,setSelectedValue] = useState("poetry");
+  const handleRadioChange = (value) => {
+    setSelectedValue(value);
+  };
  
   // Define the event handlers
   const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
@@ -56,6 +64,7 @@ const awscreds: S3ClientConfig = {
  
     // Fetch the files
     const droppedFiles = Array.from(event.dataTransfer.files);
+   
     setFiles(droppedFiles);
  
     // Use FileReader to read file content
@@ -65,13 +74,31 @@ const awscreds: S3ClientConfig = {
       console.log(files);
       const reader = new FileReader();
       reader.onload = () => {
+      
         const fileContent = reader.result;
         if (fileContent) {
-            UploadFileToS3(awscreds, "imageshare", file.name, fileContent);
-        }
+            // const returnCode2 = await Upload();
+          
+            const returnCode = UploadFileToS3(awscreds, "imageshare", selectedValue + "/" + file.name, fileContent);
+            
+            
+            console.log(`Return code ${returnCode}`)
+            returnCode.then(value => {
+              // const n = value;
+              if(value === 0) {
+                setStatus({ type: 'Success'})
+                console.log("Return is a Success")
+              } else {
+                setStatus({ type: 'Error'})
+                console.log("Return code not zero")
+              }
+            })   
+           
+          }
       };
       reader.onerror = (error) => {
           console.error("Error reading file", error);
+          setStatus({ type: 'Error' });
       };
       reader.readAsArrayBuffer(file); 
       });
@@ -82,17 +109,46 @@ const awscreds: S3ClientConfig = {
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+       
+        
+      <img src={timenspace} className="logo react" alt="React logo" />
+        
       </div>
-      <h1>Image Share system</h1>
-    
+      <h1>Time and Space - Upload</h1>
+      <p>Select upload file type</p>
+      <div className="form-check">
+          <label>
+            <input
+              type="radio"
+              name="react-tips"
+              value="poetry"
+              checked={selectedValue === "poetry"}
+              className="form-check-input"
+              onChange={() =>
+                handleRadioChange("poetry")
+              }
+            />
+            Poetry
+          </label>
+        </div>
+
+        <div className="form-check">
+          <label>
+            <input
+              type="radio"
+              name="react-tips"
+              value="picture"
+              className="form-check-input"
+              checked={selectedValue === "picture"}
+              onChange={() => handleRadioChange("picture")}
+            />
+            Picture
+          </label>
+        </div>
+
+       
       <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+        
       </p>
       <div
       onDragOver={handleDragOver}
@@ -100,15 +156,21 @@ const awscreds: S3ClientConfig = {
       onDrop={handleDrop}
       style={{
         display: "flex",
+        margin: "auto",
         justifyContent: "center",
         alignItems: "center",
         height: "50px",
         width: "300px",
         border: "1px dotted",
-        backgroundColor: isOver ? "lightgray" : "white",
+        backgroundColor: isOver ? "green" : "lightgray",
       }}
     >
-      Drag and drop some files here, Mike
+      Drag and drop some files here
+    </div>
+    
+    <div>
+    {status?.type === 'Success' && (<p>"Success is uploading file"</p>)}
+    {status?.type === 'Error' && (<p>"Error uploading file"</p>)}
     </div>
     </>
   )
