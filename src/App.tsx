@@ -43,7 +43,7 @@ const awscreds: S3ClientConfig = {
   const [files, setFiles] = useState<File[]>([]);
 
   const [ selectedValue,setSelectedValue] = useState("poetry");
-  const handleRadioChange = (value) => {
+  const handleRadioChange = (value: string) => {
     setSelectedValue(value);
   };
  
