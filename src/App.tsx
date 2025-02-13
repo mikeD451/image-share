@@ -1,4 +1,4 @@
-import { useState, setStatus } from 'react'
+import { useState } from 'react'
 import timenspace from './assets/timenspace.jpg'
 
 import './App.css'
@@ -39,7 +39,7 @@ const awscreds: S3ClientConfig = {
 };
   const [isOver, setIsOver] = useState(false);
   const [status, setStatus] = useState({ type: ''})
-
+  console.log("Set status" , setStatus);
   const [files, setFiles] = useState<File[]>([]);
 
   const [ selectedValue,setSelectedValue] = useState("poetry");
